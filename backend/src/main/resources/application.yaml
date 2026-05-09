@@ -15,19 +15,35 @@ spring:
         dialect: org.hibernate.dialect.PostgreSQLDialect
   liquibase:
     change-log: classpath:db/changelog/db.changelog-master.yaml
+  mail:
+    host: ${SPRING_MAIL_HOST:localhost}
+    port: ${SPRING_MAIL_PORT:587}
+    username: ${SPRING_MAIL_USERNAME:user}
+    password: ${SPRING_MAIL_PASSWORD:pass}
+    properties:
+      mail:
+        smtp:
+          auth: false
+          starttls:
+            enable: false
+
+springdoc:
+  model-converters:
+    querydsl-predicate-converter:
+      enabled: false
 
 security:
   jwt:
     secret-key: ${JWT_SECRET:404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970} # Example key for dev
-    access-token-expiry: 900000      # 15 min
-    refresh-token-expiry: 604800000  # 7 days
+    access-token-expiry: 900000 # 15 min
+    refresh-token-expiry: 604800000 # 7 days
 
 killbill:
   url: ${KILLBILL_URL:http://localhost:8082}
   username: admin
   password: password
-  api-key: bob
-  api-secret: lazar
+  api-key: ahmed
+  api-secret: boody
   payment-plugin: ${KILLBILL_PAYMENT_PLUGIN:__MOCK__}
   currency: EGP
   notification-url: ${KILLBILL_NOTIFICATION_URL:http://host.docker.internal:8080/hms/v1/payments/killbill-notification}
@@ -37,7 +53,7 @@ app:
     endpoint: ${MINIO_ENDPOINT:http://localhost:9000}
     access-key: ${MINIO_ACCESS_KEY:admin}
     secret-key: ${MINIO_SECRET_KEY:password}
-    bucket: ${MINIO_BUCKET:medica}
+    bucket: ${MINIO_BUCKET:hms}
 
 elasticsearch:
   enabled: ${ES_ENABLED:false}
