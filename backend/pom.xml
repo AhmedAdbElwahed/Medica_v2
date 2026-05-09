@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
 		<version>4.0.5</version>
-		<relativePath/> <!-- lookup parent from repository -->
+		<relativePath/>
+		<!-- lookup parent from repository -->
 	</parent>
 	<groupId>org.hms</groupId>
 	<artifactId>medica</artifactId>
@@ -17,12 +18,19 @@
 	<properties>
 		<java.version>26</java.version>
 		<mapstruct.version>1.6.3</mapstruct.version>
-		<springdoc.version>2.8.5</springdoc.version>
+		<springdoc.version>3.0.3</springdoc.version>
 		<querydsl-openfeign.version>6.0.0.M1</querydsl-openfeign.version>
 		<testcontainers.version>1.20.2</testcontainers.version>
 	</properties>
 
 	<dependencies>
+
+
+		<dependency>
+			<groupId>org.antlr</groupId>
+			<artifactId>antlr4-runtime</artifactId>
+			<version>4.13.2</version>
+		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-jpa</artifactId>
@@ -48,8 +56,8 @@
 			<artifactId>spring-boot-starter-mail</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>org.liquibase</groupId>
-			<artifactId>liquibase-core</artifactId>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-liquibase</artifactId>
 		</dependency>
 
 		<dependency>
@@ -91,7 +99,7 @@
 			<groupId>io.github.openfeign.querydsl</groupId>
 			<artifactId>querydsl-apt</artifactId>
 			<version>${querydsl-openfeign.version}</version>
-			<classifier>jakarta</classifier>
+			<classifier>jpa</classifier>
 			<scope>provided</scope>
 		</dependency>
 
@@ -172,6 +180,17 @@
 				<configuration>
 					<annotationProcessorPaths>
 						<path>
+							<groupId>io.github.openfeign.querydsl</groupId>
+							<artifactId>querydsl-apt</artifactId>
+							<version>${querydsl-openfeign.version}</version>
+							<classifier>jpa</classifier>
+						</path>
+						<path>
+							<groupId>jakarta.persistence</groupId>
+							<artifactId>jakarta.persistence-api</artifactId>
+							<version>3.1.0</version>
+						</path>
+						<path>
 							<groupId>org.projectlombok</groupId>
 							<artifactId>lombok</artifactId>
 						</path>
@@ -179,12 +198,6 @@
 							<groupId>org.mapstruct</groupId>
 							<artifactId>mapstruct-processor</artifactId>
 							<version>${mapstruct.version}</version>
-						</path>
-						<path>
-							<groupId>io.github.openfeign.querydsl</groupId>
-							<artifactId>querydsl-apt</artifactId>
-							<version>${querydsl-openfeign.version}</version>
-							<classifier>jakarta</classifier>
 						</path>
 					</annotationProcessorPaths>
 				</configuration>

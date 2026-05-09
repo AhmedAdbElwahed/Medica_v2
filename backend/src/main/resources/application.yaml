@@ -5,6 +5,7 @@ spring:
     url: ${DB_URL:jdbc:postgresql://localhost:5432/medica}
     username: ${DB_USERNAME:medica}
     password: ${DB_PASSWORD:medica}
+    driver-class-name: org.postgresql.Driver
   jpa:
     open-in-view: false
     hibernate:
@@ -14,7 +15,9 @@ spring:
         format_sql: true
         dialect: org.hibernate.dialect.PostgreSQLDialect
   liquibase:
+    enabled: true
     change-log: classpath:db/changelog/db.changelog-master.yaml
+
   mail:
     host: ${SPRING_MAIL_HOST:localhost}
     port: ${SPRING_MAIL_PORT:587}
@@ -26,7 +29,6 @@ spring:
           auth: false
           starttls:
             enable: false
-
 springdoc:
   model-converters:
     querydsl-predicate-converter:
@@ -66,3 +68,4 @@ logging:
   level:
     org.hms.medica: DEBUG
     org.hibernate.SQL: DEBUG
+    org.liquibase: DEBUG

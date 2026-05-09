@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 @Tag(name = "Authentication")
 public class AuthController {
 
+
     private final AuthService authService;
 
     @PostMapping("/register")

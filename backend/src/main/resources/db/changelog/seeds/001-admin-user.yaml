@@ -1,0 +1,38 @@
+databaseChangeLog:
+  - changeSet:
+      id: seed-admin-user-v2
+      author: gemini-cli
+      changes:
+        - delete:
+            tableName: users
+            where: "id = 1"
+        - insert:
+            tableName: users
+            columns:
+              - column:
+                  name: id
+                  valueNumeric: 1
+              - column:
+                  name: first_name
+                  value: System
+              - column:
+                  name: last_name
+                  value: Admin
+              - column:
+                  name: email
+                  value: admin@medica.com
+              - column:
+                  name: password
+                  value: "$2a$10$Llq60ZtwAsVf3swyarY.zesiOae9wrn9Yz5Ygi0VCK2H8rH/4PUiK" # password: password
+              - column:
+                  name: role
+                  value: ROLE_ADMIN
+              - column:
+                  name: enabled
+                  valueBoolean: true
+              - column:
+                  name: created_at
+                  valueComputed: "CURRENT_TIMESTAMP"
+              - column:
+                  name: created_by
+                  value: system

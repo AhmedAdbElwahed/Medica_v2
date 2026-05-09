@@ -14,7 +14,7 @@ import java.util.List;
 @Inheritance(strategy = InheritanceType.JOINED)
 @Getter
 @Setter
-public abstract class User extends AuditedEntity {
+public class User extends AuditedEntity {
 
     @Column(nullable = false)
     private String firstName;

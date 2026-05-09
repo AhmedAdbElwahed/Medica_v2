@@ -4,6 +4,8 @@ import jakarta.persistence.EntityNotFoundException;
 import org.hms.medica.common.dto.ErrorResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.DisabledException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -30,6 +32,16 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(AccessDeniedException.class)
     public ResponseEntity<ErrorResponse> handleForbidden(AccessDeniedException ex) {
         return ResponseEntity.status(403).body(new ErrorResponse("FORBIDDEN", "Access denied"));
+    }
+
+    @ExceptionHandler(BadCredentialsException.class)
+    public ResponseEntity<ErrorResponse> handleBadCredentials(BadCredentialsException ex) {
+        return ResponseEntity.status(401).body(new ErrorResponse("BAD_CREDENTIALS", "Invalid email or password"));
+    }
+
+    @ExceptionHandler(DisabledException.class)
+    public ResponseEntity<ErrorResponse> handleDisabled(DisabledException ex) {
+        return ResponseEntity.status(401).body(new ErrorResponse("ACCOUNT_DISABLED", "Please verify your email to activate your account"));
     }
 
     @ExceptionHandler(BusinessRuleViolationException.class)

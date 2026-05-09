@@ -6,6 +6,7 @@ import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import lombok.RequiredArgsConstructor;
 import org.hms.medica.config.JwtConfig;
+import org.hms.medica.security.CustomUserDetails;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
@@ -31,7 +32,13 @@ public class JwtService {
     }
 
     public String generateToken(UserDetails userDetails) {
-        return generateToken(new HashMap<>(), userDetails);
+        Map<String, Object> extraClaims = new HashMap<>();
+        if (userDetails instanceof CustomUserDetails customUserDetails) {
+            extraClaims.put("id", customUserDetails.getId());
+            extraClaims.put("role", customUserDetails.getRole().name());
+            extraClaims.put("name", customUserDetails.getFullName());
+        }
+        return generateToken(extraClaims, userDetails);
     }
 
     public String generateToken(Map<String, Object> extraClaims, UserDetails userDetails) {
@@ -39,7 +46,13 @@ public class JwtService {
     }
 
     public String generateRefreshToken(UserDetails userDetails) {
-        return buildToken(new HashMap<>(), userDetails, jwtConfig.getRefreshTokenExpiry());
+        Map<String, Object> extraClaims = new HashMap<>();
+        if (userDetails instanceof CustomUserDetails customUserDetails) {
+            extraClaims.put("id", customUserDetails.getId());
+            extraClaims.put("role", customUserDetails.getRole().name());
+            extraClaims.put("name", customUserDetails.getFullName());
+        }
+        return buildToken(extraClaims, userDetails, jwtConfig.getRefreshTokenExpiry());
     }
 
     private String buildToken(

@@ -1,5 +1,7 @@
 databaseChangeLog:
-  - includeAll:
-      path: db/changelog/migrations/
-  - includeAll:
-      path: db/changelog/seeds/
+  - include:
+      file: migrations/001-initial-schema.yaml
+      relativeToChangelogFile: true
+  - include:
+      file: seeds/001-admin-user.yaml
+      relativeToChangelogFile: true

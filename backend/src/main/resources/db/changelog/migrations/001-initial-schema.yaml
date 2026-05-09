@@ -1,0 +1,951 @@
+databaseChangeLog:
+  - changeSet:
+      id: 001-create-hibernate-sequence
+      author: gemini-cli
+      changes:
+        - createSequence:
+            sequenceName: hibernate_sequence
+            startValue: 100
+            incrementBy: 50
+
+  - changeSet:
+      id: 001-create-users-table
+      author: gemini-cli
+      changes:
+        - createTable:
+            tableName: users
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: first_name
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: last_name
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: email
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+                    unique: true
+              - column:
+                  name: password
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: gender
+                  type: varchar(20)
+              - column:
+                  name: date_of_birth
+                  type: date
+              - column:
+                  name: address
+                  type: varchar(255)
+              - column:
+                  name: phone_number
+                  type: varchar(50)
+              - column:
+                  name: nationality
+                  type: varchar(100)
+              - column:
+                  name: role
+                  type: varchar(50)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: enabled
+                  type: boolean
+                  defaultValueBoolean: false
+              - column:
+                  name: created_at
+                  type: timestamptz
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_at
+                  type: timestamptz
+              - column:
+                  name: created_by
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_by
+                  type: varchar(255)
+
+  - changeSet:
+      id: 001-create-wards-table
+      author: gemini-cli
+      changes:
+        - createTable:
+            tableName: wards
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: name
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+                    unique: true
+              - column:
+                  name: phone_number
+                  type: varchar(50)
+              - column:
+                  name: email
+                  type: varchar(255)
+              - column:
+                  name: number_of_beds
+                  type: int
+                  constraints:
+                    nullable: false
+              - column:
+                  name: number_of_nurses
+                  type: int
+              - column:
+                  name: gender_designation
+                  type: varchar(50)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: active
+                  type: boolean
+                  defaultValueBoolean: true
+              - column:
+                  name: locked
+                  type: boolean
+                  defaultValueBoolean: false
+              - column:
+                  name: created_at
+                  type: timestamptz
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_at
+                  type: timestamptz
+              - column:
+                  name: created_by
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_by
+                  type: varchar(255)
+
+  - changeSet:
+      id: 001-create-patients-table
+      author: gemini-cli
+      changes:
+        - createTable:
+            tableName: patients
+            columns:
+              - column:
+                  name: user_id
+                  type: bigint
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+                    foreignKeyName: fk_patients_users
+                    referencedTableName: users
+                    referencedColumnNames: id
+              - column:
+                  name: blood_type
+                  type: varchar(20)
+              - column:
+                  name: marital_status
+                  type: varchar(50)
+              - column:
+                  name: insurance_policy_number
+                  type: varchar(255)
+
+  - changeSet:
+      id: 001-create-doctors-table
+      author: gemini-cli
+      changes:
+        - createTable:
+            tableName: doctors
+            columns:
+              - column:
+                  name: user_id
+                  type: bigint
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+                    foreignKeyName: fk_doctors_users
+                    referencedTableName: users
+                    referencedColumnNames: id
+              - column:
+                  name: specialty
+                  type: varchar(100)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: education
+                  type: varchar(255)
+              - column:
+                  name: certifications
+                  type: varchar(255)
+              - column:
+                  name: years_of_experience
+                  type: int
+                  constraints:
+                    nullable: false
+              - column:
+                  name: license_number
+                  type: varchar(100)
+                  constraints:
+                    nullable: false
+                    unique: true
+              - column:
+                  name: work_start_time
+                  type: time
+                  constraints:
+                    nullable: false
+              - column:
+                  name: work_end_time
+                  type: time
+                  constraints:
+                    nullable: false
+              - column:
+                  name: active_status
+                  type: boolean
+                  defaultValueBoolean: true
+              - column:
+                  name: ward_id
+                  type: bigint
+                  constraints:
+                    foreignKeyName: fk_doctors_wards
+                    referencedTableName: wards
+                    referencedColumnNames: id
+
+  - changeSet:
+      id: 001-create-doctor-working-days-table
+      author: gemini-cli
+      changes:
+        - createTable:
+            tableName: doctor_working_days
+            columns:
+              - column:
+                  name: doctor_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_doctor_working_days_doctors
+                    referencedTableName: doctors
+                    referencedColumnNames: user_id
+              - column:
+                  name: working_days
+                  type: varchar(50)
+
+  - changeSet:
+      id: 001-create-admissions-table
+      author: gemini-cli
+      changes:
+        - createTable:
+            tableName: admissions
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: patient_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_admissions_patients
+                    referencedTableName: patients
+                    referencedColumnNames: user_id
+              - column:
+                  name: doctor_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_admissions_doctors
+                    referencedTableName: doctors
+                    referencedColumnNames: user_id
+              - column:
+                  name: ward_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_admissions_wards
+                    referencedTableName: wards
+                    referencedColumnNames: id
+              - column:
+                  name: admission_type
+                  type: varchar(50)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: diagnosis_on_admission
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: diagnosis_on_discharge
+                  type: varchar(255)
+              - column:
+                  name: admission_date
+                  type: date
+                  constraints:
+                    nullable: false
+              - column:
+                  name: expected_discharge_date
+                  type: date
+              - column:
+                  name: actual_discharge_date
+                  type: date
+              - column:
+                  name: created_at
+                  type: timestamptz
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_at
+                  type: timestamptz
+              - column:
+                  name: created_by
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_by
+                  type: varchar(255)
+
+  - changeSet:
+      id: 001-create-appointments-table
+      author: gemini-cli
+      changes:
+        - createTable:
+            tableName: appointments
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: patient_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_appointments_patients
+                    referencedTableName: patients
+                    referencedColumnNames: user_id
+              - column:
+                  name: doctor_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_appointments_doctors
+                    referencedTableName: doctors
+                    referencedColumnNames: user_id
+              - column:
+                  name: start_time
+                  type: timestamptz
+                  constraints:
+                    nullable: false
+              - column:
+                  name: reason_for_visit
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: virtual
+                  type: boolean
+                  defaultValueBoolean: false
+              - column:
+                  name: status
+                  type: varchar(50)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: paid
+                  type: boolean
+                  defaultValueBoolean: false
+              - column:
+                  name: fee_amount
+                  type: bigint
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_at
+                  type: timestamptz
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_at
+                  type: timestamptz
+              - column:
+                  name: created_by
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_by
+                  type: varchar(255)
+        - addUniqueConstraint:
+            tableName: appointments
+            columnNames: doctor_id, start_time
+            constraintName: uq_appointments_doctor_time
+        - addUniqueConstraint:
+            tableName: appointments
+            columnNames: patient_id, start_time
+            constraintName: uq_appointments_patient_time
+
+  - changeSet:
+      id: 001-create-tokens-table
+      author: gemini-cli
+      changes:
+        - createTable:
+            tableName: tokens
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: user_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_tokens_users
+                    referencedTableName: users
+                    referencedColumnNames: id
+              - column:
+                  name: token_value
+                  type: varchar(255)
+              - column:
+                  name: type
+                  type: varchar(50)
+              - column:
+                  name: expired
+                  type: boolean
+                  defaultValueBoolean: false
+              - column:
+                  name: revoked
+                  type: boolean
+                  defaultValueBoolean: false
+
+  - changeSet:
+      id: 001-create-otps-table
+      author: gemini-cli
+      changes:
+        - createTable:
+            tableName: otps
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: user_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_otps_users
+                    referencedTableName: users
+                    referencedColumnNames: id
+              - column:
+                  name: code
+                  type: varchar(50)
+              - column:
+                  name: expires_at
+                  type: timestamptz
+              - column:
+                  name: used
+                  type: boolean
+                  defaultValueBoolean: false
+
+  - changeSet:
+      id: 001-create-patient-histories-table
+      author: gemini-cli
+      changes:
+        - createTable:
+            tableName: patient_histories
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: patient_id
+                  type: bigint
+                  constraints:
+                    foreignKeyName: fk_patient_histories_patients
+                    referencedTableName: patients
+                    referencedColumnNames: user_id
+              - column:
+                  name: medical_conditions
+                  type: varchar(255)
+              - column:
+                  name: allergies
+                  type: varchar(255)
+              - column:
+                  name: past_surgeries
+                  type: varchar(255)
+              - column:
+                  name: family_medical_history
+                  type: varchar(255)
+              - column:
+                  name: has_past_ortho
+                  type: boolean
+              - column:
+                  name: has_fam_ortho
+                  type: boolean
+              - column:
+                  name: additional_notes
+                  type: text
+              - column:
+                  name: created_at
+                  type: timestamptz
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_at
+                  type: timestamptz
+              - column:
+                  name: created_by
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_by
+                  type: varchar(255)
+
+  - changeSet:
+      id: 001-create-medications-table
+      author: gemini-cli
+      changes:
+        - createTable:
+            tableName: medications
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: name
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: dosage
+                  type: varchar(255)
+              - column:
+                  name: frequency
+                  type: varchar(50)
+              - column:
+                  name: route
+                  type: varchar(50)
+              - column:
+                  name: instructions
+                  type: varchar(255)
+              - column:
+                  name: start_date
+                  type: date
+              - column:
+                  name: end_date
+                  type: date
+              - column:
+                  name: prescribed_by_doctor_id
+                  type: bigint
+                  constraints:
+                    foreignKeyName: fk_medications_doctors
+                    referencedTableName: doctors
+                    referencedColumnNames: user_id
+              - column:
+                  name: created_at
+                  type: timestamptz
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_at
+                  type: timestamptz
+              - column:
+                  name: created_by
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_by
+                  type: varchar(255)
+
+  - changeSet:
+      id: 001-create-patient-medications-table
+      author: gemini-cli
+      changes:
+        - createTable:
+            tableName: patient_medications
+            columns:
+              - column:
+                  name: patient_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_pm_patients
+                    referencedTableName: patients
+                    referencedColumnNames: user_id
+              - column:
+                  name: medication_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_pm_medications
+                    referencedTableName: medications
+                    referencedColumnNames: id
+        - addPrimaryKey:
+            tableName: patient_medications
+            columnNames: patient_id, medication_id
+            constraintName: pk_patient_medications
+
+  - changeSet:
+      id: 001-create-examinations-table
+      author: gemini-cli
+      changes:
+        - createTable:
+            tableName: examinations
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: patient_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_examinations_patients
+                    referencedTableName: patients
+                    referencedColumnNames: user_id
+              - column:
+                  name: admission_id
+                  type: bigint
+                  constraints:
+                    foreignKeyName: fk_examinations_admissions
+                    referencedTableName: admissions
+                    referencedColumnNames: id
+              - column:
+                  name: doctor_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_examinations_doctors
+                    referencedTableName: doctors
+                    referencedColumnNames: user_id
+              - column:
+                  name: examination_date
+                  type: timestamptz
+              - column:
+                  name: heart_rate
+                  type: double precision
+              - column:
+                  name: temperature
+                  type: double precision
+              - column:
+                  name: oxygen_saturation
+                  type: double precision
+              - column:
+                  name: weight
+                  type: double precision
+              - column:
+                  name: height
+                  type: double precision
+              - column:
+                  name: urine_output
+                  type: double precision
+              - column:
+                  name: bowel_movement
+                  type: varchar(50)
+              - column:
+                  name: auscultation
+                  type: varchar(50)
+              - column:
+                  name: created_at
+                  type: timestamptz
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_at
+                  type: timestamptz
+              - column:
+                  name: created_by
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_by
+                  type: varchar(255)
+
+  - changeSet:
+      id: 001-create-diagnoses-table
+      author: gemini-cli
+      changes:
+        - createTable:
+            tableName: diagnoses
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: patient_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_diagnoses_patients
+                    referencedTableName: patients
+                    referencedColumnNames: user_id
+              - column:
+                  name: doctor_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_diagnoses_doctors
+                    referencedTableName: doctors
+                    referencedColumnNames: user_id
+              - column:
+                  name: details
+                  type: text
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_at
+                  type: timestamptz
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_at
+                  type: timestamptz
+              - column:
+                  name: created_by
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_by
+                  type: varchar(255)
+
+  - changeSet:
+      id: 001-create-lab-reports-table
+      author: gemini-cli
+      changes:
+        - createTable:
+            tableName: lab_reports
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: patient_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_lab_reports_patients
+                    referencedTableName: patients
+                    referencedColumnNames: user_id
+              - column:
+                  name: doctor_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_lab_reports_doctors
+                    referencedTableName: doctors
+                    referencedColumnNames: user_id
+              - column:
+                  name: comments
+                  type: text
+              - column:
+                  name: status
+                  type: varchar(50)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_at
+                  type: timestamptz
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_at
+                  type: timestamptz
+              - column:
+                  name: created_by
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_by
+                  type: varchar(255)
+
+  - changeSet:
+      id: 001-create-lab-tests-table
+      author: gemini-cli
+      changes:
+        - createTable:
+            tableName: lab_tests
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: lab_report_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_lab_tests_reports
+                    referencedTableName: lab_reports
+                    referencedColumnNames: id
+              - column:
+                  name: test_name
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: actual_value
+                  type: double precision
+                  constraints:
+                    nullable: false
+              - column:
+                  name: normal_range_min
+                  type: double precision
+                  constraints:
+                    nullable: false
+              - column:
+                  name: normal_range_max
+                  type: double precision
+                  constraints:
+                    nullable: false
+              - column:
+                  name: unit
+                  type: varchar(50)
+
+  - changeSet:
+      id: 001-create-chat-messages-table
+      author: gemini-cli
+      changes:
+        - createTable:
+            tableName: chat_messages
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: sender_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_chat_messages_sender
+                    referencedTableName: users
+                    referencedColumnNames: id
+              - column:
+                  name: recipient_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_chat_messages_recipient
+                    referencedTableName: users
+                    referencedColumnNames: id
+              - column:
+                  name: type
+                  type: varchar(50)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: content
+                  type: text
+              - column:
+                  name: sent_at
+                  type: timestamptz
+                  constraints:
+                    nullable: false
+
+  - changeSet:
+      id: 001-create-bills-table
+      author: gemini-cli
+      changes:
+        - createTable:
+            tableName: bills
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: appointment_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_bills_appointments
+                    referencedTableName: appointments
+                    referencedColumnNames: id
+              - column:
+                  name: amount
+                  type: bigint
+                  constraints:
+                    nullable: false
+              - column:
+                  name: status
+                  type: varchar(50)
+              - column:
+                  name: stripe_session_id
+                  type: varchar(255)
+              - column:
+                  name: paid_at
+                  type: timestamptz
+              - column:
+                  name: created_at
+                  type: timestamptz
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_at
+                  type: timestamptz
+              - column:
+                  name: created_by
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_by
+                  type: varchar(255)
