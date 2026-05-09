@@ -1,0 +1,80 @@
+services:
+  # --- Project Database (PostgreSQL 16) ---
+  postgres:
+    image: postgres:16
+    environment:
+      POSTGRES_DB: medica
+      POSTGRES_USER: medica
+      POSTGRES_PASSWORD: medica
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    restart: always
+
+  # --- Search Engine (Elasticsearch 8) ---
+  elasticsearch:
+    image: elasticsearch:8.13.0
+    environment:
+      - discovery.type=single-node
+      - ES_JAVA_OPTS=-Xms512m -Xmx512m
+      - xpack.security.enabled=false
+    ports:
+      - "9200:9200"
+    volumes:
+      - es_data:/usr/share/elasticsearch/data
+    restart: always
+
+  # --- S3-Compatible Storage (MinIO) ---
+  minio:
+    image: quay.io/minio/minio
+    ports:
+      - "9000:9000" # API Port
+      - "9001:9001" # Console UI Port
+    environment:
+      MINIO_ROOT_USER: admin
+      MINIO_ROOT_PASSWORD: password
+    volumes:
+      - minio_data:/data
+    command: server /data --console-address ":9001"
+    restart: always
+
+  # --- Payment Engine (Kill Bill) ---
+  killbill-db:
+    image: killbill/mariadb:0.24
+    environment:
+      MYSQL_ROOT_PASSWORD: killbill
+      MYSQL_DATABASE: killbill
+    volumes:
+      - killbill_db_data:/var/lib/mysql
+
+  killbill:
+    image: killbill/killbill:0.24.10
+    ports:
+      - "8082:8080" # Moved to 8082 to avoid conflicts with common Spring Boot 8080
+    environment:
+      KILLBILL_DAO_URL: jdbc:mysql://killbill-db:3306/killbill
+      KILLBILL_DAO_USER: root
+      KILLBILL_DAO_PASSWORD: killbill
+    depends_on:
+      - killbill-db
+
+  kaui: # Kill Bill Admin UI
+    image: killbill/kaui:3.0.11
+    ports:
+      - "9090:8080"
+    environment:
+      KAUI_KILLBILL_URL: http://killbill:8080
+      # Add these three lines so the UI can connect to the database:
+      KAUI_CONFIG_DAO_URL: jdbc:mysql://killbill-db:3306/kaui
+      KAUI_CONFIG_DAO_USER: root
+      KAUI_CONFIG_DAO_PASSWORD: killbill
+    depends_on:
+      - killbill
+      - killbill-db
+
+volumes:
+  minio_data:
+  killbill_db_data:
+  postgres_data:
+  es_data:

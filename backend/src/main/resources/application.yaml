@@ -1,0 +1,51 @@
+spring:
+  application:
+    name: medica
+  datasource:
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/medica}
+    username: ${DB_USERNAME:medica}
+    password: ${DB_PASSWORD:medica}
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+  liquibase:
+    change-log: classpath:db/changelog/db.changelog-master.yaml
+
+security:
+  jwt:
+    secret-key: ${JWT_SECRET:404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970} # Example key for dev
+    access-token-expiry: 900000      # 15 min
+    refresh-token-expiry: 604800000  # 7 days
+
+killbill:
+  url: ${KILLBILL_URL:http://localhost:8082}
+  username: admin
+  password: password
+  api-key: bob
+  api-secret: lazar
+  payment-plugin: ${KILLBILL_PAYMENT_PLUGIN:__MOCK__}
+  currency: EGP
+  notification-url: ${KILLBILL_NOTIFICATION_URL:http://host.docker.internal:8080/hms/v1/payments/killbill-notification}
+
+minio:
+  endpoint: ${MINIO_ENDPOINT:http://localhost:9000}
+  access-key: ${MINIO_ACCESS_KEY:admin}
+  secret-key: ${MINIO_SECRET_KEY:password}
+  bucket: ${MINIO_BUCKET:medica}
+
+elasticsearch:
+  enabled: ${ES_ENABLED:false}
+  uris: ${ES_URI:http://localhost:9200}
+
+mail:
+  from: noreply@medica.com
+
+logging:
+  level:
+    org.hms.medica: DEBUG
+    org.hibernate.SQL: DEBUG
