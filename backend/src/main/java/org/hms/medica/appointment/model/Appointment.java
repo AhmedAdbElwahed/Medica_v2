@@ -6,17 +6,15 @@ import lombok.Setter;
 import org.hms.medica.common.entity.AuditedEntity;
 import org.hms.medica.doctor.model.Doctor;
 import org.hms.medica.patient.model.Patient;
+import org.hms.medica.payment.model.Bill;
 
 import java.time.LocalDateTime;
 
 @Entity
-@Table(
-    name = "appointments",
-    uniqueConstraints = {
-        @UniqueConstraint(columnNames = {"doctor_id", "startTime"}),
-        @UniqueConstraint(columnNames = {"patient_id", "startTime"})
-    }
-)
+@Table(name = "appointments", uniqueConstraints = {
+        @UniqueConstraint(columnNames = { "doctor_id", "startTime" }),
+        @UniqueConstraint(columnNames = { "patient_id", "startTime" })
+})
 @Getter
 @Setter
 public class Appointment extends AuditedEntity {
@@ -47,5 +45,5 @@ public class Appointment extends AuditedEntity {
     private Long feeAmount;
 
     @OneToOne(mappedBy = "appointment", cascade = CascadeType.ALL)
-    private org.hms.medica.payment.model.Bill bill;
+    private Bill bill;
 }

@@ -1,5 +1,5 @@
 package org.hms.medica.security.token;
 
 public enum TokenType {
-    ACCESS, REFRESH
+    BEARER, ACCESS, REFRESH
 }

@@ -1,0 +1,125 @@
+{
+  "groups": [
+    {
+      "name": "security.jwt",
+      "type": "org.hms.medica.config.JwtConfig",
+      "description": "Configuration for JWT authentication."
+    },
+    {
+      "name": "killbill",
+      "type": "org.hms.medica.config.KillbillConfig",
+      "description": "Configuration for Kill Bill billing system integration."
+    },
+    {
+      "name": "app.minio",
+      "type": "org.hms.medica.config.MinioConfig",
+      "description": "Configuration for MinIO S3-compatible storage."
+    },
+    {
+      "name": "elasticsearch",
+      "type": "org.hms.medica.config.ElasticsearchConfig",
+      "description": "Configuration for Elasticsearch search engine."
+    },
+    {
+      "name": "mail",
+      "type": "org.hms.medica.config.MailConfig",
+      "description": "Custom mail properties."
+    }
+  ],
+  "properties": [
+    {
+      "name": "security.jwt.secret-key",
+      "type": "java.lang.String",
+      "description": "Base64-encoded secret key for signing JWTs."
+    },
+    {
+      "name": "security.jwt.access-token-expiry",
+      "type": "java.lang.Long",
+      "description": "Expiration time for access tokens in milliseconds.",
+      "defaultValue": 900000
+    },
+    {
+      "name": "security.jwt.refresh-token-expiry",
+      "type": "java.lang.Long",
+      "description": "Expiration time for refresh tokens in milliseconds.",
+      "defaultValue": 604800000
+    },
+    {
+      "name": "killbill.url",
+      "type": "java.lang.String",
+      "description": "Base URL of the Kill Bill server."
+    },
+    {
+      "name": "killbill.username",
+      "type": "java.lang.String",
+      "description": "Admin username for Kill Bill."
+    },
+    {
+      "name": "killbill.password",
+      "type": "java.lang.String",
+      "description": "Admin password for Kill Bill."
+    },
+    {
+      "name": "killbill.api-key",
+      "type": "java.lang.String",
+      "description": "API Key for Kill Bill tenant."
+    },
+    {
+      "name": "killbill.api-secret",
+      "type": "java.lang.String",
+      "description": "API Secret for Kill Bill tenant."
+    },
+    {
+      "name": "killbill.payment-plugin",
+      "type": "java.lang.String",
+      "description": "Payment plugin to use (e.g., __MOCK__ or stripe)."
+    },
+    {
+      "name": "killbill.currency",
+      "type": "java.lang.String",
+      "description": "Default currency for billing (e.g., EGP).",
+      "defaultValue": "EGP"
+    },
+    {
+      "name": "killbill.notification-url",
+      "type": "java.lang.String",
+      "description": "Webhook URL for Kill Bill notifications."
+    },
+    {
+      "name": "app.minio.endpoint",
+      "type": "java.lang.String",
+      "description": "MinIO server endpoint URL."
+    },
+    {
+      "name": "app.minio.access-key",
+      "type": "java.lang.String",
+      "description": "Access key for MinIO."
+    },
+    {
+      "name": "app.minio.secret-key",
+      "type": "java.lang.String",
+      "description": "Secret key for MinIO."
+    },
+    {
+      "name": "app.minio.bucket",
+      "type": "java.lang.String",
+      "description": "Name of the default MinIO bucket."
+    },
+    {
+      "name": "elasticsearch.enabled",
+      "type": "java.lang.Boolean",
+      "description": "Whether Elasticsearch features are enabled.",
+      "defaultValue": false
+    },
+    {
+      "name": "elasticsearch.uris",
+      "type": "java.lang.String",
+      "description": "Elasticsearch connection URIs."
+    },
+    {
+      "name": "mail.from",
+      "type": "java.lang.String",
+      "description": "Default sender email address."
+    }
+  ]
+}

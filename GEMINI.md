@@ -67,7 +67,9 @@ npm run dev
 ### Coding Style
 - **Type Safety:** Use QueryDSL for complex queries; avoid raw SQL or string-based JPQL where possible.
 - **Enums:** Use Enums for fixed sets of data (e.g., `Specialty`, `WardGender`, `ReportStatus`).
+- **Null Safety:** Do **NOT** use `org.springframework.lang.NonNull` as it is deprecated in Spring 7+. Use `jakarta.annotation.Nonnull` for documentation/analysis or `lombok.NonNull` for runtime enforcement.
 - **Mapping:** Use MapStruct for DTO-Entity conversions.
+- **Configuration:** Prefer `@ConfigurationProperties` over direct `@Value` injections for type-safe, grouped configuration (e.g., `JwtConfig`).
 - **Lombok:** Extensively used for boilerplate reduction (`@Data`, `@Getter`, `@Setter`, etc.).
 
 ### Entity Design
