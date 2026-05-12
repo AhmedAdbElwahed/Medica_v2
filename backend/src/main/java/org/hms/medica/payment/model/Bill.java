@@ -22,8 +22,10 @@ public class Bill extends AuditedEntity {
     private Long amount;
 
     @Enumerated(EnumType.STRING)
-    private BillStatus status = BillStatus.UNPAID;
+    @Column(nullable = false)
+    private BillStatus status = BillStatus.PENDING;
 
-    private String stripeSessionId;
+    private String kbInvoiceId;
+    private String kbPaymentId;
     private Instant paidAt;
 }
