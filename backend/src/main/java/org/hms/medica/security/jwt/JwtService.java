@@ -38,6 +38,7 @@ public class JwtService {
             extraClaims.put("role", customUserDetails.getRole().name());
             extraClaims.put("name", customUserDetails.getFullName());
         }
+        extraClaims.put("type", "ACCESS");
         return generateToken(extraClaims, userDetails);
     }
 
@@ -52,7 +53,12 @@ public class JwtService {
             extraClaims.put("role", customUserDetails.getRole().name());
             extraClaims.put("name", customUserDetails.getFullName());
         }
+        extraClaims.put("type", "REFRESH");
         return buildToken(extraClaims, userDetails, jwtConfig.getRefreshTokenExpiry());
+    }
+
+    public String extractType(String token) {
+        return extractClaim(token, claims -> claims.get("type", String.class));
     }
 
     private String buildToken(

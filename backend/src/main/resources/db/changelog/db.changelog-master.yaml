@@ -5,3 +5,6 @@ databaseChangeLog:
   - include:
       file: seeds/001-admin-user.yaml
       relativeToChangelogFile: true
+  - include:
+      file: migrations/002-update-bills-for-killbill.yaml
+      relativeToChangelogFile: true

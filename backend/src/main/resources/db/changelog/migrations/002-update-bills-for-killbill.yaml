@@ -1,0 +1,17 @@
+databaseChangeLog:
+  - changeSet:
+      id: 002-update-bills-for-killbill
+      author: gemini-cli
+      changes:
+        - addColumn:
+            tableName: bills
+            columns:
+              - column:
+                  name: kb_invoice_id
+                  type: varchar(255)
+              - column:
+                  name: kb_payment_id
+                  type: varchar(255)
+        - dropColumn:
+            tableName: bills
+            columnName: stripe_session_id

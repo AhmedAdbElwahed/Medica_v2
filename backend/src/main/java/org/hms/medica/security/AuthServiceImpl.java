@@ -116,21 +116,29 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public AuthResponse refreshToken(String authHeader) {
-        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-            throw new BusinessRuleViolationException("Invalid refresh token");
-        }
-        String refreshToken = authHeader.substring(7);
-        String userEmail = jwtService.extractUsername(refreshToken);
-        if (userEmail != null) {
-            UserDetails userDetails = userDetailsService.loadUserByUsername(userEmail);
-            if (jwtService.isTokenValid(refreshToken, userDetails)) {
-                String accessToken = jwtService.generateToken(userDetails);
-                User user = userRepository.findByEmail(userEmail).orElseThrow();
-                revokeAllUserTokens(user);
-                saveUserToken(user, accessToken);
-                return new AuthResponse(accessToken, refreshToken);
+    public AuthResponse refreshToken(RefreshTokenRequest request) {
+        String refreshToken = request.refreshToken();
+        try {
+            String tokenType = jwtService.extractType(refreshToken);
+            if (!"REFRESH".equals(tokenType)) {
+                throw new BusinessRuleViolationException("Invalid token type");
             }
+
+            String userEmail = jwtService.extractUsername(refreshToken);
+            if (userEmail != null) {
+                UserDetails userDetails = userDetailsService.loadUserByUsername(userEmail);
+                if (jwtService.isTokenValid(refreshToken, userDetails)) {
+                    String accessToken = jwtService.generateToken(userDetails);
+                    User user = userRepository.findByEmail(userEmail).orElseThrow();
+                    revokeAllUserTokens(user);
+                    saveUserToken(user, accessToken);
+                    return new AuthResponse(accessToken, refreshToken);
+                }
+            }
+        } catch (io.jsonwebtoken.ExpiredJwtException e) {
+            throw new BusinessRuleViolationException("Refresh token expired. Please login again.");
+        } catch (io.jsonwebtoken.security.SignatureException e) {
+            throw new BusinessRuleViolationException("Invalid refresh token signature");
         }
         throw new BusinessRuleViolationException("Invalid refresh token");
     }

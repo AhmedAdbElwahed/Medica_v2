@@ -11,4 +11,6 @@ import org.springframework.stereotype.Repository;
 public interface AdmissionRepository extends JpaRepository<Admission, Long>, QuerydslPredicateExecutor<Admission> {
     @Query("SELECT COUNT(a) FROM Admission a WHERE a.ward.id = :wardId AND a.actualDischargeDate IS NULL")
     long countActiveAdmissionsInWard(@Param("wardId") Long wardId);
+
+    long countByActualDischargeDateIsNull();
 }
