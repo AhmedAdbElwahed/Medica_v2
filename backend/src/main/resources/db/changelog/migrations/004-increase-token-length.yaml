@@ -1,0 +1,9 @@
+databaseChangeLog:
+  - changeSet:
+      id: 004-increase-token-length
+      author: gemini-cli
+      changes:
+        - modifyDataType:
+            tableName: tokens
+            columnName: token_value
+            newDataType: text

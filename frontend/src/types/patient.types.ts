@@ -3,6 +3,7 @@ export interface PatientDto {
   firstName: string;
   lastName: string;
   email: string;
+  profilePhotoUrl?: string;
   gender: "MALE" | "FEMALE";
   dateOfBirth: string;
   address: string;

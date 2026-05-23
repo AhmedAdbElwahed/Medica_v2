@@ -27,6 +27,7 @@ import { DoctorDto, Specialty } from "@/types/doctor.types";
 import { useQuery } from "@tanstack/react-query";
 import { wardApi } from "@/lib/api/ward.api";
 import { Loader2 } from "lucide-react";
+import { ProfilePhotoUpload } from "@/components/shared/profile-photo-upload";
 
 const SPECIALTIES: Specialty[] = [
   "GENERAL_PRACTICE", "PEDIATRICS", "CARDIOLOGY", "NEUROLOGY",
@@ -85,6 +86,17 @@ export function DoctorForm({ initialData, onSubmit, isLoading }: DoctorFormProps
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+        {initialData?.id && (
+          <div className="flex justify-center pb-6 border-b">
+            <div className="space-y-4 text-center">
+              <FormLabel className="text-base">Profile Photo</FormLabel>
+              <ProfilePhotoUpload 
+                currentPhotoUrl={initialData.profilePhotoUrl} 
+                userId={initialData.id}
+              />
+            </div>
+          </div>
+        )}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {/* Personal Info */}
           <div className="space-y-6">

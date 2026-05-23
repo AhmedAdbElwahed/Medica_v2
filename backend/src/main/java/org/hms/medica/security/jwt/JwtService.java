@@ -37,6 +37,7 @@ public class JwtService {
             extraClaims.put("id", customUserDetails.getId());
             extraClaims.put("role", customUserDetails.getRole().name());
             extraClaims.put("name", customUserDetails.getFullName());
+            extraClaims.put("photo", customUserDetails.getProfilePhotoUrl());
         }
         extraClaims.put("type", "ACCESS");
         return generateToken(extraClaims, userDetails);
@@ -52,6 +53,7 @@ public class JwtService {
             extraClaims.put("id", customUserDetails.getId());
             extraClaims.put("role", customUserDetails.getRole().name());
             extraClaims.put("name", customUserDetails.getFullName());
+            extraClaims.put("photo", customUserDetails.getProfilePhotoUrl());
         }
         extraClaims.put("type", "REFRESH");
         return buildToken(extraClaims, userDetails, jwtConfig.getRefreshTokenExpiry());

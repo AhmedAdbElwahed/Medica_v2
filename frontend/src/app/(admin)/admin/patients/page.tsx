@@ -43,6 +43,7 @@ import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 export default function PatientListPage() {
   const [search, setSearch] = useState("");
@@ -105,7 +106,7 @@ export default function PatientListPage() {
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>Name</TableHead>
+              <TableHead>Patient</TableHead>
               <TableHead>Gender</TableHead>
               <TableHead>Phone</TableHead>
               <TableHead>Blood Type</TableHead>
@@ -139,9 +140,17 @@ export default function PatientListPage() {
               patientsPage?.data.content.map((patient) => (
                 <TableRow key={patient.id}>
                   <TableCell>
-                    <div className="flex flex-col">
-                      <span className="font-medium">{patient.firstName} {patient.lastName}</span>
-                      <span className="text-xs text-slate-500">{patient.email}</span>
+                    <div className="flex items-center gap-3">
+                      <Avatar className="h-10 w-10 border border-slate-100">
+                        <AvatarImage src={patient.profilePhotoUrl} className="object-cover" />
+                        <AvatarFallback className="bg-slate-100 text-slate-600">
+                          {patient.firstName[0]}{patient.lastName[0]}
+                        </AvatarFallback>
+                      </Avatar>
+                      <div className="flex flex-col">
+                        <span className="font-medium">{patient.firstName} {patient.lastName}</span>
+                        <span className="text-xs text-slate-500">{patient.email}</span>
+                      </div>
                     </div>
                   </TableCell>
                   <TableCell>

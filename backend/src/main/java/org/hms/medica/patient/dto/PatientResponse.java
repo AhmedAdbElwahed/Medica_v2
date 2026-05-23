@@ -17,6 +17,7 @@ public record PatientResponse(
     String phoneNumber,
     String address,
     String nationality,
+    String profilePhotoUrl,
     BloodType bloodType,
     MaritalStatus maritalStatus,
     String insurancePolicyNumber,

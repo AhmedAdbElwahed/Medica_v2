@@ -18,6 +18,7 @@ public class CustomUserDetails implements UserDetails {
     private final boolean enabled;
     private final String firstName;
     private final String lastName;
+    private final String profilePhotoUrl;
     private final Role role;
     private final Collection<? extends GrantedAuthority> authorities;
 
@@ -28,6 +29,7 @@ public class CustomUserDetails implements UserDetails {
         this.enabled = user.isEnabled();
         this.firstName = user.getFirstName();
         this.lastName = user.getLastName();
+        this.profilePhotoUrl = user.getProfilePhotoUrl();
         this.role = user.getRole();
         this.authorities = Collections.singletonList(new SimpleGrantedAuthority(user.getRole().name()));
     }

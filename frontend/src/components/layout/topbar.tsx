@@ -10,11 +10,12 @@ import {
   DropdownMenuSeparator, 
   DropdownMenuTrigger 
 } from "@/components/ui/dropdown-menu";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Bell, Search } from "lucide-react";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
+import Link from "next/link";
 
 export function Topbar() {
   const { data: session } = useSession();
@@ -49,6 +50,7 @@ export function Topbar() {
             )}
           >
             <Avatar className="h-8 w-8">
+              <AvatarImage src={user?.image || undefined} alt={user?.name || ""} />
               <AvatarFallback className="bg-primary text-primary-foreground">
                 {initials}
               </AvatarFallback>
@@ -62,7 +64,9 @@ export function Topbar() {
             <DropdownMenuGroup>
               <DropdownMenuLabel>My Account</DropdownMenuLabel>
               <DropdownMenuSeparator />
-              <DropdownMenuItem>Profile Settings</DropdownMenuItem>
+              <Link href="/admin/profile">
+                <DropdownMenuItem className="cursor-pointer">Profile Settings</DropdownMenuItem>
+              </Link>
               <DropdownMenuItem>Support</DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />

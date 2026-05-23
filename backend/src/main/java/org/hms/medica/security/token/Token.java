@@ -16,6 +16,7 @@ public class Token extends BaseEntity {
     @JoinColumn(name = "user_id")
     private User user;
 
+    @Column(columnDefinition = "TEXT")
     private String tokenValue;
 
     @Enumerated(EnumType.STRING)

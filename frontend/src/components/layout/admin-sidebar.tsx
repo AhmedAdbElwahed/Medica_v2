@@ -31,6 +31,7 @@ const sidebarLinks = [
   { label: "Admissions", href: "/admin/admissions", icon: ClipboardList },
   { label: "Appointments", href: "/admin/appointments", icon: CalendarCheck },
   { label: "Billing", href: "/admin/billing", icon: CreditCard },
+  { label: "Profile", href: "/admin/profile", icon: UserRound },
   { label: "Settings", href: "/admin/settings", icon: Settings },
 ];
 

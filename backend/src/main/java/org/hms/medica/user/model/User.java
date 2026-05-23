@@ -36,6 +36,8 @@ public class User extends AuditedEntity {
     private String phoneNumber;
     private String nationality;
 
+    private String profilePhotoUrl;
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Role role;

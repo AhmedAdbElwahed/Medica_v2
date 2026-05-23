@@ -54,6 +54,7 @@ export const authOptions: NextAuthOptions = {
               name: decoded.name,
               email: decoded.sub,
               role: decoded.role,
+              photo: decoded.photo,
               accessToken: accessToken,
               refreshToken: refreshToken,
             };
@@ -67,7 +68,7 @@ export const authOptions: NextAuthOptions = {
     }),
   ],
   callbacks: {
-    async jwt({ token, user, account }) {
+    async jwt({ token, user, account, trigger, session }) {
       if (user && account) {
         return {
           accessToken: user.accessToken,
@@ -77,7 +78,12 @@ export const authOptions: NextAuthOptions = {
           role: user.role,
           name: user.name,
           email: user.email,
+          photo: user.photo,
         };
+      }
+
+      if (trigger === "update" && session?.image) {
+        token.photo = session.image;
       }
 
       if (Date.now() < (token.accessTokenExpires as number)) {
@@ -90,6 +96,7 @@ export const authOptions: NextAuthOptions = {
       if (token) {
         session.user.id = token.id;
         session.user.role = token.role;
+        session.user.image = token.photo;
         session.user.accessToken = token.accessToken;
         session.error = token.error;
       }

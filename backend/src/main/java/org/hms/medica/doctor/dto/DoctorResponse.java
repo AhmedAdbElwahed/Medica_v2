@@ -16,6 +16,7 @@ public record DoctorResponse(
     Gender gender,
     LocalDate dateOfBirth,
     String phoneNumber,
+    String profilePhotoUrl,
     Specialty specialty,
     String education,
     String certifications,

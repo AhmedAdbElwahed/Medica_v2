@@ -8,3 +8,9 @@ databaseChangeLog:
   - include:
       file: migrations/002-update-bills-for-killbill.yaml
       relativeToChangelogFile: true
+  - include:
+      file: migrations/003-add-profile-photo-to-users.yaml
+      relativeToChangelogFile: true
+  - include:
+      file: migrations/004-increase-token-length.yaml
+      relativeToChangelogFile: true

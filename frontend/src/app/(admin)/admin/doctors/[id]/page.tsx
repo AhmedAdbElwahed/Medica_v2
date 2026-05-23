@@ -11,19 +11,18 @@ import {
   Mail, 
   Briefcase, 
   GraduationCap, 
-  Award, 
   Clock, 
   MapPin,
   Calendar,
-  Stethoscope,
-  Phone,
   ShieldCheck
 } from "lucide-react";
+
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Separator } from "@/components/ui/separator";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 export default function DoctorProfilePage() {
   const { id } = useParams();
@@ -67,6 +66,8 @@ export default function DoctorProfilePage() {
     );
   }
 
+  const initials = `${doctor.firstName[0]}${doctor.lastName[0]}`;
+
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
@@ -85,9 +86,12 @@ export default function DoctorProfilePage() {
         <Card className="lg:col-span-1">
           <CardContent className="pt-6">
             <div className="flex flex-col items-center text-center">
-              <div className="h-24 w-24 rounded-full bg-blue-50 flex items-center justify-center text-blue-600 mb-4">
-                <Stethoscope className="h-12 w-12" />
-              </div>
+              <Avatar className="h-24 w-24 mb-4 border-2 border-slate-100">
+                <AvatarImage src={doctor.profilePhotoUrl} className="object-cover" />
+                <AvatarFallback className="bg-blue-50 text-blue-600 text-2xl">
+                  {initials}
+                </AvatarFallback>
+              </Avatar>
               <h2 className="text-2xl font-bold text-slate-900">Dr. {doctor.firstName} {doctor.lastName}</h2>
               <p className="text-blue-600 font-medium">{doctor.specialty.replace("_", " ")}</p>
               

@@ -8,6 +8,7 @@ export interface DoctorDto {
   firstName: string;
   lastName: string;
   email: string;
+  profilePhotoUrl?: string;
   specialty: Specialty;
   education: string;
   certifications: string;

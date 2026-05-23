@@ -201,9 +201,12 @@ export default function DoctorListPage() {
                 <TableRow key={doctor.id}>
                   <TableCell>
                     <div className="flex items-center gap-3">
-                      <div className="h-10 w-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-600">
-                        <Stethoscope className="h-5 w-5" />
-                      </div>
+                      <Avatar className="h-10 w-10 border border-slate-100">
+                        <AvatarImage src={doctor.profilePhotoUrl} className="object-cover" />
+                        <AvatarFallback className="bg-slate-100 text-slate-600">
+                          {doctor.firstName[0]}{doctor.lastName[0]}
+                        </AvatarFallback>
+                      </Avatar>
                       <div className="flex flex-col">
                         <span className="font-medium">Dr. {doctor.firstName} {doctor.lastName}</span>
                         <span className="text-xs text-slate-500">{doctor.email}</span>
