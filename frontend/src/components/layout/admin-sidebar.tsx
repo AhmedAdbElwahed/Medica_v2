@@ -2,18 +2,17 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { 
-  LayoutDashboard, 
-  Users, 
-  UserRound, 
-  Hotel, 
-  ClipboardList, 
-  CalendarCheck, 
-  CreditCard, 
+import {
+  LayoutDashboard,
+  Users,
+  UserRound,
+  Hotel,
+  ClipboardList,
+  CalendarCheck,
+  CreditCard,
   Settings,
   LogOut,
-  ChevronLeft,
-  ChevronRight
+  ChevronLeft
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -22,6 +21,7 @@ import { Separator } from "@/components/ui/separator";
 import { useState } from "react";
 import { signOut } from "next-auth/react";
 import { toast } from "sonner";
+import Image from "next/image";
 
 const sidebarLinks = [
   { label: "Dashboard", href: "/admin/dashboard", icon: LayoutDashboard },
@@ -50,22 +50,55 @@ export function AdminSidebar() {
 
   return (
     <div className={cn(
-      "relative flex flex-col border-r bg-slate-900 text-slate-100 transition-all duration-300",
+      "relative flex flex-col border-r bg-sidebar text-sidebar-foreground transition-all duration-300",
       isCollapsed ? "w-20" : "w-64"
     )}>
-      <div className="flex h-16 items-center justify-between px-6">
-        {!isCollapsed && <span className="text-xl font-bold tracking-tight">Medica</span>}
-        <Button 
-          variant="ghost" 
-          size="icon" 
-          onClick={() => setIsCollapsed(!isCollapsed)}
-          className="text-slate-400 hover:text-white"
-        >
-          {isCollapsed ? <ChevronRight /> : <ChevronLeft />}
-        </Button>
+      <div className="flex h-16 items-center justify-between px-4">
+        {isCollapsed ? (
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => setIsCollapsed(false)}
+            className="mx-auto text-sidebar-foreground/60 hover:text-white hover:bg-sidebar-accent h-10 w-10 p-0 flex items-center justify-center rounded-lg"
+            title="Expand Sidebar"
+          >
+            <Image
+              src="/hms_logo.png"
+              alt="Medica logo"
+              width={40}
+              height={40}
+              className="object-contain brightness-0 invert"
+              priority
+            />
+          </Button>
+        ) : (
+          <>
+            <div className="flex items-center gap-2.5 pl-2">
+              <Image
+                src="/hms_logo.png"
+                alt="Medica logo"
+                width={32}
+                height={32}
+                className="object-contain brightness-0 invert"
+                priority
+              />
+              <span className="text-xl font-bold tracking-tight text-white">
+                Medica
+              </span>
+            </div>
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => setIsCollapsed(true)}
+              className="text-sidebar-foreground/60 hover:text-white hover:bg-sidebar-accent"
+            >
+              <ChevronLeft className="h-5 w-5" />
+            </Button>
+          </>
+        )}
       </div>
 
-      <Separator className="bg-slate-800" />
+      <Separator className="bg-sidebar-border" />
 
       <ScrollArea className="flex-1 px-4 py-6">
         <nav className="space-y-2">
@@ -77,9 +110,9 @@ export function AdminSidebar() {
                 href={link.href}
                 className={cn(
                   "flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium transition-colors",
-                  isActive 
-                    ? "bg-primary text-white" 
-                    : "text-slate-400 hover:bg-slate-800 hover:text-white",
+                  isActive
+                    ? "bg-sidebar-primary text-sidebar-primary-foreground"
+                    : "text-sidebar-foreground/60 hover:bg-sidebar-accent hover:text-sidebar-foreground",
                   isCollapsed && "justify-center px-0"
                 )}
               >
@@ -91,13 +124,13 @@ export function AdminSidebar() {
         </nav>
       </ScrollArea>
 
-      <Separator className="bg-slate-800" />
+      <Separator className="bg-sidebar-border" />
 
       <div className="p-4">
         <Button
           variant="ghost"
           className={cn(
-            "w-full justify-start gap-3 text-slate-400 hover:bg-slate-800 hover:text-white",
+            "w-full justify-start gap-3 text-sidebar-foreground/60 hover:bg-sidebar-accent hover:text-sidebar-foreground",
             isCollapsed && "justify-center px-0"
           )}
           onClick={handleLogout}
