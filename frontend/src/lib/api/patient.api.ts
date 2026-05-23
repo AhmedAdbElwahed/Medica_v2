@@ -1,4 +1,5 @@
 import apiClient from "./client";
+import { AxiosResponse } from "axios";
 import { PatientDto, PatientResponse } from "@/types/patient.types";
 import { Page } from "@/types/common.types";
 
@@ -17,7 +18,7 @@ const mapResponse = (patient: any): PatientResponse => {
   };
 };
 
-const mapPageResponse = (response: any): Page<PatientResponse> => {
+const mapPageResponse = (response: any): AxiosResponse<Page<PatientResponse>> => {
   const data = response?.data;
   if (!data) return response;
   return {

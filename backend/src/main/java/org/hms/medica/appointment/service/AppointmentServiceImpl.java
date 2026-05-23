@@ -87,6 +87,7 @@ public class AppointmentServiceImpl implements AppointmentService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public PageResponse<AppointmentResponse> getAppointments(AppointmentFilter filter, Pageable pageable) {
         BooleanBuilder builder = new BooleanBuilder();
         QAppointment appointment = QAppointment.appointment;
@@ -117,6 +118,7 @@ public class AppointmentServiceImpl implements AppointmentService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public AppointmentResponse getById(Long id, String currentEmail) {
         Appointment appointment = appointmentRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Appointment not found with id: " + id));
@@ -133,6 +135,7 @@ public class AppointmentServiceImpl implements AppointmentService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public PageResponse<AppointmentResponse> getMyAppointments(String email, Pageable pageable) {
         Patient patient = patientRepository.findByEmail(email)
                 .orElseThrow(() -> new EntityNotFoundException("Patient not found with email: " + email));

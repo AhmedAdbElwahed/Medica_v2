@@ -161,12 +161,14 @@ public class PaymentServiceImpl implements PaymentService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public PageResponse<BillResponse> getBillsByPatientEmail(String email, Pageable pageable) {
         Page<Bill> page = billRepository.findByAppointmentPatientEmail(email, pageable);
         return PageResponse.of(page.map(billMapper::toResponse));
     }
 
     @Override
+    @Transactional(readOnly = true)
     public BillResponse getById(Long id) {
         return billRepository.findById(id)
                 .map(billMapper::toResponse)
@@ -174,6 +176,7 @@ public class PaymentServiceImpl implements PaymentService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public PageResponse<BillResponse> getAllBills(Pageable pageable) {
         Page<Bill> page = billRepository.findAll(pageable);
         return PageResponse.of(page.map(billMapper::toResponse));

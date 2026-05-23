@@ -1,4 +1,5 @@
 import apiClient from "./client";
+import { AxiosResponse } from "axios";
 import { WardDto, WardResponse } from "@/types/ward.types";
 import { Page } from "@/types/common.types";
 
@@ -11,7 +12,7 @@ const mapResponse = (ward: any): WardResponse => {
   };
 };
 
-const mapPageResponse = (response: any): Page<WardResponse> => {
+const mapPageResponse = (response: any): AxiosResponse<Page<WardResponse>> => {
   const data = response?.data;
   if (!data) return response;
   return {

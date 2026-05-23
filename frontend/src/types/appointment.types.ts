@@ -1,19 +1,39 @@
+import { Page } from "./common.types";
+
 export type AppointmentStatus = "PENDING" | "COMPLETED" | "CANCELED";
 
-export interface AppointmentResponseDto {
+export interface AppointmentResponse {
   id: number;
+  patientId: number;
   patientName: string;
+  doctorId: number;
   doctorName: string;
-  startTime: string; // ISO string
+  doctorSpecialty: string;
+  startTime: string; // ISO string e.g. "2026-05-24T10:30:00"
   reasonForVisit: string;
-  isVirtual: boolean;
+  virtual: boolean;
   status: AppointmentStatus;
   paid: boolean;
+  feeAmount: number; // in piasters (EGP cents)
+  createdAt: string; // ISO string
 }
 
-export interface BookAppointmentRequest {
+export interface AdminBookAppointmentRequest {
+  patientId: number;
   doctorId: number;
-  startTime: string; // "HH:mm"
+  startTime: string; // ISO string
   reasonForVisit: string;
-  isVirtual: boolean;
+  virtual: boolean;
+  feeAmount: number; // in piasters
+}
+
+export interface AppointmentFilters {
+  doctorId?: number;
+  patientId?: number;
+  date?: string; // YYYY-MM-DD
+  status?: AppointmentStatus;
+  paid?: boolean;
+  virtual?: boolean;
+  page?: number;
+  size?: number;
 }

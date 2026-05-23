@@ -61,7 +61,9 @@ export default function EditWardPage() {
         <CardContent className="pt-6">
           <WardForm 
             initialData={ward}
-            onSubmit={(values) => mutation.mutateAsync(values)} 
+            onSubmit={async (values) => {
+              await mutation.mutateAsync(values);
+            }} 
             isLoading={mutation.isPending} 
             onCancel={() => router.push("/admin/wards")}
           />

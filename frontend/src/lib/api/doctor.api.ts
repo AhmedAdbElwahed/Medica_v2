@@ -25,6 +25,6 @@ export const doctorApi = {
   delete: (id: number) => 
     apiClient.delete<void>(`/doctors/${id}`),
     
-  getAvailableTime: (doctorId: number) => 
-    apiClient.get<string[]>(`/doctor/get-available-time/${doctorId}`),
+  getAvailableSlots: (doctorId: number, date: string) => 
+    apiClient.get<string[]>(`/doctors/${doctorId}/available-slots`, { params: { date } }),
 };

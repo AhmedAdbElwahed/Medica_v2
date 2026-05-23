@@ -16,7 +16,8 @@ import {
   LogOut,
   CheckCircle,
   FileText,
-  AlertCircle
+  AlertCircle,
+  Loader2
 } from "lucide-react";
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";

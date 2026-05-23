@@ -1,0 +1,9 @@
+databaseChangeLog:
+  - changeSet:
+      id: 006-alter-appointments-reason-to-text
+      author: antigravity
+      changes:
+        - modifyDataType:
+            tableName: appointments
+            columnName: reason_for_visit
+            newDataType: text

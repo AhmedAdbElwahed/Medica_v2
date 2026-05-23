@@ -6,7 +6,7 @@ import {
   RecentActivity 
 } from "@/types/dashboard.types";
 import { PatientDto } from "@/types/patient.types";
-import { AppointmentResponseDto } from "@/types/appointment.types";
+import { AppointmentResponse } from "@/types/appointment.types";
 
 export const dashboardApi = {
   getSummary: () => 
@@ -25,7 +25,7 @@ export const dashboardApi = {
     apiClient.get<RecentActivity[]>("/dashboard/recent-activity"),
     
   getTodayAppointments: () => 
-    apiClient.get<AppointmentResponseDto[]>("/dashboard/today-appointments"),
+    apiClient.get<AppointmentResponse[]>("/dashboard/today-appointments"),
     
   getRecentPatients: () => 
     apiClient.get<PatientDto[]>("/dashboard/recent-patients"),

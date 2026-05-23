@@ -30,7 +30,7 @@ public class Appointment extends AuditedEntity {
     @Column(nullable = false)
     private LocalDateTime startTime;
 
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "TEXT")
     private String reasonForVisit;
 
     private boolean virtual = false;

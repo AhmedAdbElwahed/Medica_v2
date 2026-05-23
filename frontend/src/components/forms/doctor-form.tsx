@@ -80,7 +80,7 @@ export function DoctorForm({ initialData, onSubmit, isLoading }: DoctorFormProps
   });
 
   const form = useForm<DoctorFormValues>({
-    resolver: zodResolver(formSchema),
+    resolver: zodResolver(formSchema) as any,
     defaultValues: {
       firstName: initialData?.firstName || "",
       lastName: initialData?.lastName || "",

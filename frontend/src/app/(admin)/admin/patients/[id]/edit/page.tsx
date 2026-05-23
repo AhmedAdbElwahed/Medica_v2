@@ -64,7 +64,9 @@ export default function EditPatientPage() {
         <CardContent className="pt-6">
           <PatientForm 
             initialData={patient}
-            onSubmit={(values) => mutation.mutateAsync(values)} 
+            onSubmit={async (values) => {
+              await mutation.mutateAsync(values);
+            }} 
             isLoading={mutation.isPending} 
             onCancel={() => router.push(`/admin/patients/${patientId}`)}
           />
