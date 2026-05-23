@@ -36,10 +36,15 @@ const SPECIALTIES: Specialty[] = [
   "GASTROENTEROLOGY", "PULMONOLOGY"
 ];
 
+const SPECIALTY_ITEMS = SPECIALTIES.map((s) => ({
+  value: s,
+  label: s.replace("_", " "),
+}));
+
 const formSchema = z.object({
   firstName: z.string().min(2, "First name must be at least 2 characters"),
   lastName: z.string().min(2, "Last name must be at least 2 characters"),
-  email: z.string().email("Invalid email address"),
+  email: z.email("Invalid email address"),
   specialty: z.enum(SPECIALTIES as [string, ...string[]]),
   education: z.string().min(10, "Education details are required"),
   certifications: z.string().min(5, "Certifications are required"),
@@ -59,6 +64,15 @@ interface DoctorFormProps {
   isLoading?: boolean;
 }
 
+const formatTimeToHHmm = (timeString?: string) => {
+  if (!timeString) return "";
+  // If format is HH:mm:ss, slice it to HH:mm
+  if (timeString.length === 8 && timeString.includes(":")) {
+    return timeString.slice(0, 5);
+  }
+  return timeString;
+};
+
 export function DoctorForm({ initialData, onSubmit, isLoading }: DoctorFormProps) {
   const { data: wardsPage, isLoading: isLoadingWards } = useQuery({
     queryKey: ["wards"],
@@ -76,8 +90,8 @@ export function DoctorForm({ initialData, onSubmit, isLoading }: DoctorFormProps
       certifications: initialData?.certifications || "",
       yearsOfExperience: initialData?.yearsOfExperience || 0,
       licenseNumber: initialData?.licenseNumber || "",
-      workStartTime: initialData?.workStartTime || "09:00",
-      workEndTime: initialData?.workEndTime || "17:00",
+      workStartTime: formatTimeToHHmm(initialData?.workStartTime) || "09:00",
+      workEndTime: formatTimeToHHmm(initialData?.workEndTime) || "17:00",
       activeStatus: initialData?.activeStatus ?? true,
       wardId: initialData?.wardId || undefined,
     },
@@ -151,7 +165,7 @@ export function DoctorForm({ initialData, onSubmit, isLoading }: DoctorFormProps
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Specialty</FormLabel>
-                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                    <Select onValueChange={field.onChange} value={field.value} items={SPECIALTY_ITEMS}>
                       <FormControl>
                         <SelectTrigger>
                           <SelectValue placeholder="Select specialty" />
@@ -179,6 +193,10 @@ export function DoctorForm({ initialData, onSubmit, isLoading }: DoctorFormProps
                       onValueChange={field.onChange} 
                       value={field.value?.toString()}
                       disabled={isLoadingWards}
+                      items={wardsPage?.data.content.map((ward) => ({
+                        value: ward.id.toString(),
+                        label: `Ward #${ward.id} (${ward.genderDesignation.toLowerCase().split("_")[0]})`,
+                      }))}
                     >
                       <FormControl>
                         <SelectTrigger>
@@ -188,7 +206,7 @@ export function DoctorForm({ initialData, onSubmit, isLoading }: DoctorFormProps
                       <SelectContent>
                         {wardsPage?.data.content.map((ward) => (
                           <SelectItem key={ward.id} value={ward.id.toString()}>
-                            Ward #{ward.id} ({ward.wardGender})
+                            Ward #{ward.id} ({ward.genderDesignation.toLowerCase().split("_")[0]})
                           </SelectItem>
                         ))}
                       </SelectContent>

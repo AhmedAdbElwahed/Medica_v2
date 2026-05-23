@@ -9,23 +9,78 @@ export interface PatientFilters {
   size?: number;
 }
 
+const mapResponse = (patient: any): PatientResponse => {
+  if (!patient) return patient;
+  return {
+    ...patient,
+    phone: patient.phoneNumber || patient.phone || "",
+  };
+};
+
+const mapPageResponse = (response: any): Page<PatientResponse> => {
+  const data = response?.data;
+  if (!data) return response;
+  return {
+    ...response,
+    data: {
+      ...data,
+      content: data.content?.map(mapResponse) || [],
+    },
+  };
+};
+
 export const patientApi = {
-  getAll: (filters: PatientFilters) => 
-    apiClient.get<Page<PatientResponse>>("/patients", { params: filters }),
+  getAll: async (filters: PatientFilters) => {
+    const res = await apiClient.get<Page<PatientResponse>>("/patients", { params: filters });
+    return mapPageResponse(res);
+  },
     
-  getById: (id: number) => 
-    apiClient.get<PatientResponse>(`/patients/${id}`),
+  getById: async (id: number) => {
+    const res = await apiClient.get<PatientResponse>(`/patients/${id}`);
+    res.data = mapResponse(res.data);
+    return res;
+  },
     
-  create: (data: Partial<PatientDto>) => 
-    apiClient.post<PatientResponse>("/patients", data),
+  create: async (data: Partial<PatientDto>) => {
+    const { phone, ...rest } = data;
+    const requestData = {
+      ...rest,
+      phoneNumber: phone,
+      // Provide a default secure password for the generated Spring Security user account
+      password: "Patient@Medica2026",
+    };
+    const res = await apiClient.post<PatientResponse>("/patients", requestData);
+    res.data = mapResponse(res.data);
+    return res;
+  },
     
-  update: (id: number, data: Partial<PatientDto>) => 
-    apiClient.put<PatientResponse>(`/patients/${id}`, data),
+  update: async (id: number, data: Partial<PatientDto>) => {
+    const { phone, ...rest } = data;
+    const requestData = {
+      ...rest,
+      ...(phone !== undefined ? { phoneNumber: phone } : {}),
+    };
+    const res = await apiClient.put<PatientResponse>(`/patients/${id}`, requestData);
+    res.data = mapResponse(res.data);
+    return res;
+  },
     
   delete: (id: number) => 
     apiClient.delete<void>(`/patients/${id}`),
     
-  getNew: () => apiClient.get<PatientResponse[]>("/patients/new"),
-  getOld: () => apiClient.get<PatientResponse[]>("/patients/old"),
-  getToday: () => apiClient.get<PatientResponse[]>("/patients/today"),
+  getNew: async () => {
+    const res = await apiClient.get<PatientResponse[]>("/patients/new");
+    res.data = res.data?.map(mapResponse);
+    return res;
+  },
+  getOld: async () => {
+    const res = await apiClient.get<PatientResponse[]>("/patients/old");
+    res.data = res.data?.map(mapResponse);
+    return res;
+  },
+  getToday: async () => {
+    const res = await apiClient.get<PatientResponse[]>("/patients/today");
+    res.data = res.data?.map(mapResponse);
+    return res;
+  },
 };

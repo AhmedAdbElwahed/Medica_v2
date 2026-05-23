@@ -14,3 +14,6 @@ databaseChangeLog:
   - include:
       file: migrations/004-increase-token-length.yaml
       relativeToChangelogFile: true
+  - include:
+      file: migrations/005-alter-admissions-columns-to-text.yaml
+      relativeToChangelogFile: true

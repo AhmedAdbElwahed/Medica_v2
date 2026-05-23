@@ -1,0 +1,13 @@
+databaseChangeLog:
+  - changeSet:
+      id: 005-alter-admissions-columns-to-text
+      author: gemini-cli
+      changes:
+        - modifyDataType:
+            tableName: admissions
+            columnName: diagnosis_on_admission
+            newDataType: text
+        - modifyDataType:
+            tableName: admissions
+            columnName: diagnosis_on_discharge
+            newDataType: text

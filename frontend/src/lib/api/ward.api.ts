@@ -2,19 +2,73 @@ import apiClient from "./client";
 import { WardDto, WardResponse } from "@/types/ward.types";
 import { Page } from "@/types/common.types";
 
+const mapResponse = (ward: any): WardResponse => {
+  if (!ward) return ward;
+  return {
+    ...ward,
+    phone: ward.phoneNumber || ward.phone || "",
+    currentOccupancy: ward.currentPatientCount ?? ward.currentOccupancy ?? 0,
+  };
+};
+
+const mapPageResponse = (response: any): Page<WardResponse> => {
+  const data = response?.data;
+  if (!data) return response;
+  return {
+    ...response,
+    data: {
+      ...data,
+      content: data.content?.map(mapResponse) || [],
+    },
+  };
+};
+
 export const wardApi = {
-  getAll: () => 
-    apiClient.get<Page<WardResponse>>("/wards"),
+  getAll: async () => {
+    const res = await apiClient.get<Page<WardResponse>>("/wards");
+    return mapPageResponse(res);
+  },
     
-  getById: (id: number) => 
-    apiClient.get<WardResponse>(`/wards/${id}`),
+  getById: async (id: number) => {
+    const res = await apiClient.get<WardResponse>(`/wards/${id}`);
+    res.data = mapResponse(res.data);
+    return res;
+  },
     
-  create: (data: Partial<WardDto>) => 
-    apiClient.post<WardResponse>("/wards", data),
+  create: async (data: Partial<WardDto>) => {
+    const { phone, ...rest } = data;
+    const requestData = {
+      ...rest,
+      phoneNumber: phone,
+    };
+    const res = await apiClient.post<WardResponse>("/wards", requestData);
+    res.data = mapResponse(res.data);
+    return res;
+  },
     
-  update: (id: number, data: Partial<WardDto>) => 
-    apiClient.put<WardResponse>(`/wards/${id}`, data),
+  update: async (id: number, data: Partial<WardDto>) => {
+    const { phone, ...rest } = data;
+    const requestData = {
+      ...rest,
+      ...(phone !== undefined ? { phoneNumber: phone } : {}),
+    };
+    const res = await apiClient.put<WardResponse>(`/wards/${id}`, requestData);
+    res.data = mapResponse(res.data);
+    return res;
+  },
     
   delete: (id: number) => 
     apiClient.delete<void>(`/wards/${id}`),
+    
+  toggleLock: async (id: number) => {
+    const res = await apiClient.patch<WardResponse>(`/wards/${id}/toggle-lock`);
+    res.data = mapResponse(res.data);
+    return res;
+  },
+    
+  toggleActive: async (id: number) => {
+    const res = await apiClient.patch<WardResponse>(`/wards/${id}/toggle-active`);
+    res.data = mapResponse(res.data);
+    return res;
+  },
 };

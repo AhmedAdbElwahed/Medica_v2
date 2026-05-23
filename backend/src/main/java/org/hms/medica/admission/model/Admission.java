@@ -32,9 +32,10 @@ public class Admission extends AuditedEntity {
     @Column(nullable = false)
     private AdmissionType admissionType;
 
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "TEXT")
     private String diagnosisOnAdmission;
 
+    @Column(columnDefinition = "TEXT")
     private String diagnosisOnDischarge;
 
     @Column(nullable = false)

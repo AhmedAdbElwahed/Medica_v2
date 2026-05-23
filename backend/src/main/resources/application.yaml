@@ -55,7 +55,7 @@ app:
     endpoint: ${MINIO_ENDPOINT:http://localhost:9000}
     access-key: ${MINIO_ACCESS_KEY:admin}
     secret-key: ${MINIO_SECRET_KEY:password}
-    bucket: ${MINIO_BUCKET:hms}
+    bucket: ${MINIO_BUCKET:medica}
 
 elasticsearch:
   enabled: ${ES_ENABLED:false}

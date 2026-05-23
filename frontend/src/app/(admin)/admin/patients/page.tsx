@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { patientApi, PatientFilters } from "@/lib/api/patient.api";
 import { PageHeader } from "@/components/shared/page-header";
 import { Button, buttonVariants } from "@/components/ui/button";
@@ -21,7 +21,8 @@ import {
   Eye, 
   Pencil, 
   Trash2, 
-  FilterX 
+  FilterX,
+  Loader2
 } from "lucide-react";
 import { useDebouncedValue } from "@/lib/hooks/use-debounced-value";
 import { 
@@ -41,15 +42,49 @@ import {
 import { Badge } from "@/components/ui/badge";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
-import { format } from "date-fns";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { toast } from "sonner";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+
+const formatBloodType = (type: string) => {
+  const map: Record<string, string> = {
+    A_POS: "A+",
+    A_NEG: "A-",
+    B_POS: "B+",
+    B_NEG: "B-",
+    AB_POS: "AB+",
+    AB_NEG: "AB-",
+    O_POS: "O+",
+    O_NEG: "O-",
+    A_POSITIVE: "A+",
+    A_NEGATIVE: "A-",
+    B_POSITIVE: "B+",
+    B_NEGATIVE: "B-",
+    AB_POSITIVE: "AB+",
+    AB_NEGATIVE: "AB-",
+    O_POSITIVE: "O+",
+    O_NEGATIVE: "O-",
+  };
+  return map[type] || type;
+};
 
 export default function PatientListPage() {
+  const queryClient = useQueryClient();
   const [search, setSearch] = useState("");
   const debouncedSearch = useDebouncedValue(search, 500);
   const [page, setPage] = useState(0);
   const [size, setSize] = useState(10);
+  
+  // Delete confirmation state
+  const [deleteId, setDeleteId] = useState<number | null>(null);
 
   const filters: PatientFilters = {
     name: debouncedSearch || undefined,
@@ -62,7 +97,25 @@ export default function PatientListPage() {
     queryFn: () => patientApi.getAll(filters),
   });
 
+  const deleteMutation = useMutation({
+    mutationFn: (id: number) => patientApi.delete(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["patients"] });
+      toast.success("Patient deleted successfully");
+      setDeleteId(null);
+    },
+    onError: () => {
+      toast.error("Failed to delete patient");
+    }
+  });
+
   const totalPages = patientsPage?.data.totalPages ?? 0;
+
+  const handleDelete = () => {
+    if (deleteId) {
+      deleteMutation.mutate(deleteId);
+    }
+  };
 
   return (
     <div className="space-y-6">
@@ -161,7 +214,7 @@ export default function PatientListPage() {
                   <TableCell>{patient.phone}</TableCell>
                   <TableCell>
                     <Badge variant="outline" className="bg-slate-50">
-                      {patient.bloodType.replace("_", "")}
+                      {formatBloodType(patient.bloodType)}
                     </Badge>
                   </TableCell>
                   <TableCell className="font-mono text-xs">{patient.insurancePolicyNumber || "N/A"}</TableCell>
@@ -188,7 +241,10 @@ export default function PatientListPage() {
                             <Pencil className="mr-2 h-4 w-4" /> Edit Patient
                           </Link>
                         </DropdownMenuItem>
-                        <DropdownMenuItem className="text-destructive">
+                        <DropdownMenuItem 
+                          className="text-destructive cursor-pointer"
+                          onClick={() => setDeleteId(patient.id)}
+                        >
                           <Trash2 className="mr-2 h-4 w-4" /> Delete
                         </DropdownMenuItem>
                       </DropdownMenuContent>
@@ -218,33 +274,55 @@ export default function PatientListPage() {
                 {Array.from({ length: totalPages }).map((_, i) => (
                   <PaginationItem key={i}>
                     <PaginationLink 
-                      href="#" 
-                      isActive={page === i}
-                      onClick={(e) => {
-                        e.preventDefault();
-                        setPage(i);
-                      }}
-                    >
-                      {i + 1}
-                    </PaginationLink>
-                  </PaginationItem>
-                ))}
-
-                <PaginationItem>
-                  <PaginationNext 
                     href="#" 
+                    isActive={page === i}
                     onClick={(e) => {
                       e.preventDefault();
-                      if (page < totalPages - 1) setPage(page + 1);
+                      setPage(i);
                     }}
-                    className={page === totalPages - 1 ? "pointer-events-none opacity-50" : ""}
-                  />
+                  >
+                    {i + 1}
+                  </PaginationLink>
                 </PaginationItem>
-              </PaginationContent>
-            </Pagination>
-          </div>
-        )}
+              ))}
+
+              <PaginationItem>
+                <PaginationNext 
+                  href="#" 
+                  onClick={(e) => {
+                    e.preventDefault();
+                    if (page < totalPages - 1) setPage(page + 1);
+                  }}
+                  className={page === totalPages - 1 ? "pointer-events-none opacity-50" : ""}
+                />
+              </PaginationItem>
+            </PaginationContent>
+          </Pagination>
+        </div>
+      )}
       </div>
+
+      <Dialog open={!!deleteId} onOpenChange={(open) => !open && setDeleteId(null)}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Are you sure?</DialogTitle>
+            <DialogDescription>
+              This action cannot be undone. This will permanently delete the patient from the system.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setDeleteId(null)}>Cancel</Button>
+            <Button 
+              variant="destructive" 
+              onClick={handleDelete}
+              disabled={deleteMutation.isPending}
+            >
+              {deleteMutation.isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+              Delete
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

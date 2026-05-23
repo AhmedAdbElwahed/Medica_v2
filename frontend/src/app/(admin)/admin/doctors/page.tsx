@@ -61,6 +61,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 const SPECIALTIES: Specialty[] = [
   "GENERAL_PRACTICE", "PEDIATRICS", "CARDIOLOGY", "NEUROLOGY",

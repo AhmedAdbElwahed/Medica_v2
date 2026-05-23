@@ -67,6 +67,13 @@ public class DoctorServiceImpl implements DoctorService {
         QDoctor qDoctor = QDoctor.doctor;
         BooleanBuilder builder = new BooleanBuilder();
 
+        if (filter.getName() != null && !filter.getName().isBlank()) {
+            String[] parts = filter.getName().trim().split("\\s+");
+            for (String part : parts) {
+                builder.and(qDoctor.firstName.containsIgnoreCase(part)
+                    .or(qDoctor.lastName.containsIgnoreCase(part)));
+            }
+        }
         if (filter.getFirstName() != null) {
             builder.and(qDoctor.firstName.containsIgnoreCase(filter.getFirstName()));
         }

@@ -10,10 +10,10 @@ export const patientSchema = z.object({
   phone: z.string().min(8, "Phone number must be at least 8 characters"),
   nationality: z.string().min(2, "Nationality is required"),
   bloodType: z.enum([
-    "A_POSITIVE", "A_NEGATIVE", 
-    "B_POSITIVE", "B_NEGATIVE", 
-    "AB_POSITIVE", "AB_NEGATIVE", 
-    "O_POSITIVE", "O_NEGATIVE"
+    "A_POS", "A_NEG", 
+    "B_POS", "B_NEG", 
+    "AB_POS", "AB_NEG", 
+    "O_POS", "O_NEG"
   ]),
   insurancePolicyNumber: z.string().optional().or(z.literal("")),
   maritalStatus: z.enum(["SINGLE", "MARRIED", "DIVORCED", "WIDOWED"]),
